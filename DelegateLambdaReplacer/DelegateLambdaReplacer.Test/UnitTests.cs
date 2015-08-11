@@ -127,8 +127,6 @@ namespace DelegateLambdaReplacer.Test
         }
     }";
             VerifyCSharpFix(test, fixedTest);
-
-            Task task = Task.Run(delegate () { Console.WriteLine("Meh"); });
         }
 
         protected override CodeFixProvider GetCSharpCodeFixProvider()
