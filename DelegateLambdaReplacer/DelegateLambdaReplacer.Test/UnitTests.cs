@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using TestHelper;
 using DelegateLambdaReplacer;
+using System.Threading.Tasks;
 
 namespace DelegateLambdaReplacer.Test
 {
@@ -126,6 +127,8 @@ namespace DelegateLambdaReplacer.Test
         }
     }";
             VerifyCSharpFix(test, fixedTest);
+
+            Task task = Task.Run(delegate () { Console.WriteLine("Meh"); });
         }
 
         protected override CodeFixProvider GetCSharpCodeFixProvider()

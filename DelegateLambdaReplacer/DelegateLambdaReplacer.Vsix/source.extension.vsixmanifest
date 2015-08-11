@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="DelegateLambdaReplacer.Vsix..39c8c005-fca9-4500-95bc-09fd7701203e" Version="1.0" Language="en-US" Publisher="Adrian"/>
-    <DisplayName>DelegateLambdaReplacer.Vsix</DisplayName>
-    <Description xml:space="preserve">This is a sample diagnostic extension for the .NET Compiler Platform ("Roslyn").</Description>
+    <Identity Id="DelegateLambdaReplacer.Vsix..39c8c005-fca9-4500-95bc-09fd7701203e" Version="1.0" Language="en-US" Publisher="Adrian Perez Heredia"/>
+    <DisplayName>Delegate-Lambda Replacer</DisplayName>
+    <Description xml:space="preserve">This extension detects and replaces delegate definitions using the delegate keyword with lambda expressions.This extensions </Description>
+    <License>LICENSE.txt</License>
   </Metadata>
   <Installation>
     <InstallationTarget Version="[14.0,]" Id="Microsoft.VisualStudio.Pro" />

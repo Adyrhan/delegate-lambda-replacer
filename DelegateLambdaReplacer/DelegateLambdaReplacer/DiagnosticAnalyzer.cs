@@ -27,19 +27,25 @@ namespace DelegateLambdaReplacer
 
         public override void Initialize(AnalysisContext context)
         {
-            // TODO: Consider registering other actions that act on syntax instead of or in addition to symbols
-            //context.RegisterSymbolAction(AnalyzeSymbol, SymbolKind.NamedType);
             context.RegisterSyntaxNodeAction(AnalyzeNode, ImmutableArray.Create(SyntaxKind.AnonymousMethodExpression));
         }
 
         public static void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
-            var node = context.Node;
+            try
+            {
+                var node = context.Node;
 
-            var name = node.Parent.Parent.ChildTokens().ElementAt(0).Text;
+                var name = node.Parent.Parent.ChildTokens().ElementAt(0).Text;
 
-            var diagnostic = Diagnostic.Create(Rule, node.GetLocation(), name);
-            context.ReportDiagnostic(diagnostic);
+                var diagnostic = Diagnostic.Create(Rule, node.GetLocation(), name);
+                context.ReportDiagnostic(diagnostic);
+            }
+            catch (Exception e)
+            {
+                var exc = e;
+            }
+            
         }
 
     }
