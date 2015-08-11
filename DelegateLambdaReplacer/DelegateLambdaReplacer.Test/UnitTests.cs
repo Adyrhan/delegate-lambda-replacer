@@ -49,7 +49,7 @@ namespace DelegateLambdaReplacer.Test
             var expected = new DiagnosticResult
             {
                 Id = "DelegateLambdaReplacer",
-                Message = "Definition of 'myDelegate' has been made using a delegate instead of a lambda expression.",
+                Message = "Definition of delegate has been made using delegate keyword instead of a lambda expression.",
                 Severity = DiagnosticSeverity.Warning,
                 Locations =
                     new[] {

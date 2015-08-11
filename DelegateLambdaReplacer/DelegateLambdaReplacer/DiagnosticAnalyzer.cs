@@ -36,9 +36,7 @@ namespace DelegateLambdaReplacer
             {
                 var node = context.Node;
 
-                var name = node.Parent.Parent.ChildTokens().ElementAt(0).Text;
-
-                var diagnostic = Diagnostic.Create(Rule, node.GetLocation(), name);
+                var diagnostic = Diagnostic.Create(Rule, node.GetLocation());
                 context.ReportDiagnostic(diagnostic);
             }
             catch (Exception e)
