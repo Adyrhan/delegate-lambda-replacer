@@ -32,18 +32,10 @@ namespace DelegateLambdaReplacer
 
         public static void AnalyzeNode(SyntaxNodeAnalysisContext context)
         {
-            try
-            {
-                var node = context.Node;
+            var node = context.Node;
 
-                var diagnostic = Diagnostic.Create(Rule, node.GetLocation());
-                context.ReportDiagnostic(diagnostic);
-            }
-            catch (Exception e)
-            {
-                var exc = e;
-            }
-            
+            var diagnostic = Diagnostic.Create(Rule, node.GetLocation());
+            context.ReportDiagnostic(diagnostic);
         }
 
     }

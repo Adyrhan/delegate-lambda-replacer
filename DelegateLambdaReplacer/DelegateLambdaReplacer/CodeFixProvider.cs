@@ -32,69 +32,57 @@ namespace DelegateLambdaReplacer
 
         public sealed override async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
-            try
-            {
-                var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+            var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
 
-                var diagnostic = context.Diagnostics.First();
-                var diagnosticSpan = diagnostic.Location.SourceSpan;
+            var diagnostic = context.Diagnostics.First();
+            var diagnosticSpan = diagnostic.Location.SourceSpan;
 
-                var declaration = (AnonymousMethodExpressionSyntax)root.FindNode(diagnosticSpan).DescendantNodesAndSelf().OfType<AnonymousMethodExpressionSyntax>().First();
+            var declaration = (AnonymousMethodExpressionSyntax)root.FindNode(diagnosticSpan).DescendantNodesAndSelf().OfType<AnonymousMethodExpressionSyntax>().First();
 
-                context.RegisterCodeFix(
-                    CodeAction.Create(
-                        title: title,
-                        createChangedDocument: c => MakeLambdaExpressionAsync(context.Document, declaration, c),
-                        equivalenceKey: title
-                    ),
-                    diagnostic
-                );
-            }
-            catch (Exception e)
-            {
-                var exc = e;
-            }
+            context.RegisterCodeFix(
+                CodeAction.Create(
+                    title: title,
+                    createChangedDocument: c => MakeLambdaExpressionAsync(context.Document, declaration, c),
+                    equivalenceKey: title
+                ),
+                diagnostic
+            );
             
         }
 
         private async Task<Document> MakeLambdaExpressionAsync(Document document, AnonymousMethodExpressionSyntax anonMethod, CancellationToken cancellationToken)
         {
-            try
+            
+            var parent = anonMethod.Parent;
+
+            var parameterList = anonMethod.ParameterList != null ? anonMethod.ParameterList : SyntaxFactory.ParameterList();
+
+            SyntaxNode body;
+
+            if (anonMethod.Block != null && anonMethod.Block.Statements.Count == 1)
             {
-                var parent = anonMethod.Parent;
-
-                var parameterList = anonMethod.ParameterList != null ? anonMethod.ParameterList : SyntaxFactory.ParameterList();
-
-                SyntaxNode body;
-
-                if (anonMethod.Block != null && anonMethod.Block.Statements.Count == 1)
-                {
-                    body = anonMethod.Block.Statements.ElementAt(0).ChildNodes().ElementAt(0);
-                }
-                else if (anonMethod.Block != null)
-                {
-                    body = anonMethod.Body;
-                }
-                else
-                {
-                    body = SyntaxFactory.Block();
-                }
-
-                var lambdaExpr = SyntaxFactory.
-                    ParenthesizedLambdaExpression(parameterList, (CSharpSyntaxNode)body);
-
-                var newParent = parent.ReplaceNode(anonMethod, lambdaExpr);
-
-                var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-
-                var newRoot = root.ReplaceNode(parent, newParent);
-
-                return document.WithSyntaxRoot(newRoot);
+                body = anonMethod.Block.Statements.ElementAt(0).ChildNodes().ElementAt(0);
             }
-            catch (Exception e)
+            else if (anonMethod.Block != null)
             {
-                return null;
+                body = anonMethod.Body;
             }
+            else
+            {
+                body = SyntaxFactory.Block();
+            }
+
+            var lambdaExpr = SyntaxFactory.
+                ParenthesizedLambdaExpression(parameterList, (CSharpSyntaxNode)body);
+
+            var newParent = parent.ReplaceNode(anonMethod, lambdaExpr);
+
+            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+
+            var newRoot = root.ReplaceNode(parent, newParent);
+
+            return document.WithSyntaxRoot(newRoot);
+
         }
 
     }
